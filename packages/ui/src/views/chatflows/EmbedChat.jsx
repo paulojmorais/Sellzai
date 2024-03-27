@@ -110,7 +110,7 @@ const chatwindowConfig = (isReact = false) => {
                     height: 700,
                     width: 400,
                     fontSize: 16,
-                    poweredByTextColor: "#303235",
+                    poweredByTextColor: "#00000000",
                     botMessage: {
                         backgroundColor: "#f7f8ff",
                         textColor: "#303235",
@@ -136,7 +136,7 @@ const chatwindowConfig = (isReact = false) => {
                 height: 700,
                 width: 400,
                 fontSize: 16,
-                poweredByTextColor: "#303235",
+                poweredByTextColor: "#00000000",
                 botMessage: {
                     backgroundColor: "#f7f8ff",
                     textColor: "#303235",
