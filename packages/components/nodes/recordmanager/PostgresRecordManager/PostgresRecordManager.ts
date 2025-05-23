@@ -4,7 +4,6 @@ import { ListKeyOptions, RecordManagerInterface, UpdateOptions } from '@langchai
 import { DataSource } from 'typeorm'
 import { getHost, getSSL } from '../../vectorstores/Postgres/utils'
 import { getDatabase, getPort, getTableName } from './utils'
-import fs from 'fs'
 
 const serverCredentialsExists = !!process.env.POSTGRES_RECORDMANAGER_USER && !!process.env.POSTGRES_RECORDMANAGER_PASSWORD
 
@@ -228,6 +227,8 @@ class PostgresRecordManager implements RecordManagerInterface {
             const queryRunner = dataSource.createQueryRunner()
             const tableName = this.sanitizeTableName(this.tableName)
 
+            await queryRunner.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
+
             await queryRunner.manager.query(`
   CREATE TABLE IF NOT EXISTS "${tableName}" (
     uuid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -259,9 +260,9 @@ class PostgresRecordManager implements RecordManagerInterface {
         const dataSource = await this.getDataSource()
         try {
             const queryRunner = dataSource.createQueryRunner()
-            const res = await queryRunner.manager.query('SELECT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)')
+            const res = await queryRunner.manager.query('SELECT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS now')
             await queryRunner.release()
-            return Number.parseFloat(res[0].extract)
+            return Number.parseFloat(res[0].now)
         } catch (error) {
             console.error('Error getting time in PostgresRecordManager:')
             throw error
